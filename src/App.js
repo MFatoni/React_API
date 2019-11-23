@@ -5,9 +5,15 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      dataApi: []
+      dataApi: [],
+      dataPost: {
+        id: 0,
+        title: "",
+        body: ""
+      }
     };
     this.handleRemove = this.handleRemove.bind(this);
+    this.inputChange = this.inputChange.bind(this);
   }
   handleRemove(e) {
     console.log(e.target.value);
@@ -23,6 +29,23 @@ class App extends Component {
       });
     });
   }
+
+  inputChange(e) {
+    let newdataPost = {...this.state.dataPost};
+    newdataPost["id"] = new Date().getTime();
+    newdataPost[e.target.name] = e.target.value;
+    this.setState(
+      {
+        dataPost: newdataPost
+      },
+      () => console.log(this.state.dataPost)
+    );
+  }
+  onSubmitForm = () => {
+    axios.post(`http://localhost:3004/posts`, this.state.dataPost).then(() => {
+      this.reloadData();
+    });
+  };
   componentDidMount() {
     // fetch("https://jsonplaceholder.typicode.com/posts")
     //   .then(response => response.json())
@@ -35,6 +58,22 @@ class App extends Component {
     return (
       <div>
         <p>Hello Api</p>
+        <input
+          type="text"
+          name="body"
+          placeholder="Masukkan Body"
+          onChange={this.inputChange}
+        />
+        <input
+          type="text"
+          name="title"
+          placeholder="Masukkan Title"
+          onChange={this.inputChange}
+        />
+        <button type="submit" onClick={this.onSubmitForm}>
+          {" "}
+          Add Data{" "}
+        </button>
         {this.state.dataApi.map((data, index) => {
           return (
             <div key={index}>
