@@ -7,6 +7,21 @@ class App extends Component {
     this.state = {
       dataApi: []
     };
+    this.handleRemove = this.handleRemove.bind(this);
+  }
+  handleRemove(e) {
+    console.log(e.target.value);
+    fetch(`http://localhost:3004/posts/${e.target.value}`, {
+      method: "DELETE"
+    }).then(res => this.reloadData());
+  }
+
+  reloadData() {
+    axios.get("http://localhost:3004/posts").then(res => {
+      this.setState({
+        dataApi: res.data
+      });
+    });
   }
   componentDidMount() {
     // fetch("https://jsonplaceholder.typicode.com/posts")
@@ -14,12 +29,7 @@ class App extends Component {
     //   .then(json => {
     //     this.setState({dataApi: json});
     //   });
-
-    axios.get("https://jsonplaceholder.typicode.com/posts").then(res => {
-      this.setState({
-        dataApi: res.data
-      });
-    });
+    this.reloadData();
   }
   render() {
     return (
@@ -29,6 +39,9 @@ class App extends Component {
           return (
             <div key={index}>
               <p>{data.title}</p>
+              <button value={data.id} onClick={this.handleRemove}>
+                Delete
+              </button>
             </div>
           );
         })}
