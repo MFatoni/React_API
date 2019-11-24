@@ -6,6 +6,7 @@ class App extends Component {
     super(props);
     this.state = {
       dataApi: [],
+      edit: false,
       dataPost: {
         id: 0,
         title: "",
@@ -25,14 +26,17 @@ class App extends Component {
   reloadData() {
     axios.get("http://localhost:3004/posts").then(res => {
       this.setState({
-        dataApi: res.data
+        dataApi: res.data,
+        edit: false
       });
     });
   }
 
   inputChange(e) {
     let newdataPost = {...this.state.dataPost};
-    newdataPost["id"] = new Date().getTime();
+    if (this.state.edit === false) {
+      newdataPost["id"] = new Date().getTime();
+    }
     newdataPost[e.target.name] = e.target.value;
     this.setState(
       {
@@ -42,8 +46,40 @@ class App extends Component {
     );
   }
   onSubmitForm = () => {
-    axios.post(`http://localhost:3004/posts`, this.state.dataPost).then(() => {
-      this.reloadData();
+    if (this.state.edit === false) {
+      axios
+        .post(`http://localhost:3004/posts`, this.state.dataPost)
+        .then(() => {
+          this.reloadData();
+          this.clearData();
+        });
+    } else {
+      axios
+        .put(
+          `http://localhost:3004/posts/${this.state.dataPost.id}`,
+          this.state.dataPost
+        )
+        .then(() => {
+          this.reloadData();
+          this.clearData();
+        });
+    }
+  };
+  clearData = () => {
+    let newdataPost = {...this.state.dataPost};
+    newdataPost["id"] = "";
+    newdataPost["body"] = "";
+    newdataPost["title"] = "";
+    this.setState({
+      dataPost: newdataPost
+    });
+  };
+  getDataId = e => {
+    axios.get(`http://localhost:3004/posts/${e.target.value}`).then(res => {
+      this.setState({
+        dataPost: res.data,
+        edit: true
+      });
     });
   };
   componentDidMount() {
@@ -61,12 +97,14 @@ class App extends Component {
         <input
           type="text"
           name="body"
+          value={this.state.dataPost.body || ""}
           placeholder="Masukkan Body"
           onChange={this.inputChange}
         />
         <input
           type="text"
           name="title"
+          value={this.state.dataPost.title || ""}
           placeholder="Masukkan Title"
           onChange={this.inputChange}
         />
@@ -80,6 +118,9 @@ class App extends Component {
               <p>{data.title}</p>
               <button value={data.id} onClick={this.handleRemove}>
                 Delete
+              </button>
+              <button value={data.id} onClick={this.getDataId}>
+                Edit Data
               </button>
             </div>
           );

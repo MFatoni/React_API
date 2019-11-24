@@ -1,43 +1,27 @@
 {
   "posts": [
     {
-      "id": 1,
-      "title": "json-server",
-      "author": "typicode"
+      "id": 1574555749686,
+      "title": "test",
+      "body": "test"
     },
     {
-      "id": 2,
-      "title": "json-server2",
-      "author": "typicode2"
+      "id": 1574555753710,
+      "title": "test1",
+      "body": "test1"
     },
     {
-      "id": 3,
-      "title": "json-server3",
-      "author": "typicode3"
+      "id": 1574555838459,
+      "title": "test2",
+      "body": "test2"
     },
     {
-      "id": 1574525933610,
-      "title": "Test",
-      "body": "Tets"
-    },
-    {
-      "id": 1574526044812,
-      "title": "Test",
-      "body": "Test2"
-    },
-    {
-      "id": 1574526135444,
-      "title": "Test3",
-      "body": "Test3"
+      "id": 1574555851960,
+      "title": "test3",
+      "body": "test3"
     }
   ],
-  "comments": [
-    {
-      "id": 1,
-      "body": "some comment",
-      "postId": 1
-    }
-  ],
+  "comments": [],
   "profile": {
     "name": "typicode"
   }
